@@ -5,36 +5,35 @@ const fs = require("fs/promises");
 
 const makeVegObject = async (vegetable) => {
 	try {
+		const baseUrl = "https://www.rhs.org.uk";
 		const { data } = await axios.get(
-			`https://www.rhs.org.uk/vegetables/${vegetable}/grow-your-own`
+			`${baseUrl}/vegetables/${vegetable}/grow-your-own`
 		);
+
 		const dom = htmlparser2.parseDocument(data);
 		const $ = cheerio.load(dom);
+
 		const name = $("h1[class=h1--alt]").html();
+
 		const p = $("p").text();
-		let desc = p.slice(546);
-		desc = desc.split(".");
-		desc.pop();
-		desc.pop();
-		desc.pop();
-		desc.pop();
-		desc = desc.join(". ");
+		const desc = p.slice(546).split(".").slice(0, -4).join(". ");
 
 		const img = $("img");
-		const imgUrl = `https://www.rhs.org.uk${img["12"].attribs.src}`;
+		const imgUrl = `${baseUrl}${img[12].attribs.src}`;
+
 		const tables = $("table");
-		const table = tables["0"].children["0"].children;
+		const table = tables[0].children[0].children;
 		const monthlyJob = [];
 		table.forEach((row, rowIndex) => {
 			row.children.forEach((child, index) => {
-				child.children.forEach((kid) => {
-					if (kid && kid.data) {
+				child.children.forEach((element) => {
+					if (element && element.data) {
 						if (rowIndex === 1) {
-							monthlyJob[index] = kid.data;
+							monthlyJob[index] = element.data;
 						} else if (rowIndex === 3) {
-							monthlyJob[index + 3] = kid.data;
+							monthlyJob[index + 3] = element.data;
 						} else if (rowIndex === 5) {
-							monthlyJob[index + 5] = kid.data;
+							monthlyJob[index + 5] = element.data;
 						}
 					}
 				});
@@ -42,6 +41,7 @@ const makeVegObject = async (vegetable) => {
 		});
 
 		const veg = { name, imgUrl, monthlyJob, desc };
+
 		return veg;
 	} catch (err) {
 		console.log(err);
@@ -98,9 +98,9 @@ const veg = [
 
 const getVegData = async () => {
 	const vegPromises = veg.map((vegetable) => makeVegObject(vegetable));
-	const vegData = await Promise.all(vegPromises);
 	try {
-		await fs.writeFile("./data/veg.json", JSON.stringify(vegData));
+		const vegData = await Promise.all(vegPromises);
+		fs.writeFile("./veg.json", JSON.stringify(vegData));
 	} catch (err) {
 		console.log(err);
 	}
