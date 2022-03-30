@@ -1,2 +1,5 @@
 DROP DATABASE IF EXISTS plants;
+DROP DATABASE IF EXISTS plants_test;
+
 CREATE DATABASE plants;
+CREATE DATABASE plants_test;
