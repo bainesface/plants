@@ -41,7 +41,7 @@ describe("/api", () => {
 		});
 	});
 	describe("/plants", () => {
-		test("GET: Returns 200 and array of plants", async () => {
+		test("GET: 200 returns array of plants", async () => {
 			const {
 				body: { plants },
 			} = await request(app).get("/api/plants").expect(200);
@@ -60,13 +60,13 @@ describe("/api", () => {
 				);
 			});
 		});
-		test("GET: Plants are sorted alphabetically and in ascending order by default", async () => {
+		test("GET: 200 Plants are sorted alphabetically and in ascending order by default", async () => {
 			const {
 				body: { plants },
 			} = await request(app).get("/api/plants").expect(200);
 			expect(plants).toBeSortedBy("plant_name");
 		});
-		test("GET: Plants can be sorted by comment count", async () => {
+		test("GET: 200 Plants can be sorted by comment count", async () => {
 			const {
 				body: { plants },
 			} = await request(app)
@@ -74,17 +74,23 @@ describe("/api", () => {
 				.expect(200);
 			expect(plants).toBeSortedBy("comment_count");
 		});
-		test("GET: Plants can be sorted by votes", async () => {
+		test("GET: 200 Plants can be sorted by votes", async () => {
 			const {
 				body: { plants },
 			} = await request(app).get("/api/plants?sort_by=votes").expect(200);
 			expect(plants).toBeSortedBy("votes");
 		});
-		test("GET: Plants can be ordered descendingly", async () => {
+		test("GET: 200 Plants can be ordered descendingly", async () => {
 			const {
 				body: { plants },
 			} = await request(app).get("/api/plants?order=desc").expect(200);
 			expect(plants).toBeSortedBy("plant_name", { descending: true });
+		});
+		test("GET: 400 Plants can only be sorted by a vaild query", async () => {
+			const {
+				body: { msg },
+			} = await request(app).get("/api/plants?sort_by=bananas").expect(400);
+			expect(msg).toBe("Invalid sort by");
 		});
 	});
 	describe("/plants/:plant_id", () => {

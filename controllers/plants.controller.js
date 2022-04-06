@@ -2,8 +2,12 @@ const { fetchPlants, fetchPlantById } = require("../models/plants.model");
 
 exports.getPlants = async (req, res, next) => {
 	const { sort_by, order } = req.query;
-	const plants = await fetchPlants(sort_by, order);
-	res.status(200).send({ plants });
+	try {
+		const plants = await fetchPlants(sort_by, order);
+		res.status(200).send({ plants });
+	} catch (err) {
+		next(err);
+	}
 };
 
 exports.getPlantById = async (req, res, next) => {

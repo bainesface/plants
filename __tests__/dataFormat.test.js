@@ -13,9 +13,6 @@ describe("formatVeg", () => {
 					img_url: expect.any(String),
 					description: expect.any(String),
 					type: "veg",
-					sow: expect.any(Array),
-					plant: expect.any(Array),
-					harvest: expect.any(Array),
 				})
 			);
 		});
