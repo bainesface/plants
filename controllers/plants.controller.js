@@ -1,4 +1,8 @@
-const { fetchPlants, fetchPlantById } = require("../models/plants.model");
+const {
+	fetchPlants,
+	fetchPlantById,
+	addPlant,
+} = require("../models/plants.model");
 const { checkTypeExists } = require("../models/types.model");
 
 exports.getPlants = async (req, res, next) => {
@@ -20,4 +24,9 @@ exports.getPlantById = async (req, res, next) => {
 	} catch (err) {
 		next(err);
 	}
+};
+
+exports.postPlant = async (req, res, next) => {
+	const plant = await addPlant(req.body);
+	res.status(201).send({ plant });
 };

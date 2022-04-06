@@ -42,3 +42,12 @@ exports.fetchPlantById = async (id) => {
 	}
 	return rows[0];
 };
+
+exports.addPlant = async (plant) => {
+	const { plant_name, img_url, description, type } = plant;
+	const { rows } = await db.query(
+		`INSERT INTO plants (plant_name, img_url, description, type) VALUES ($1, $2, $3, $4) RETURNING *;`,
+		[plant_name, img_url, description, type]
+	);
+	return rows[0];
+};

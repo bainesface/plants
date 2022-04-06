@@ -1,7 +1,11 @@
 const plantsRouter = require("express").Router();
-const { getPlants, getPlantById } = require("../controllers/plants.controller");
+const {
+	getPlants,
+	getPlantById,
+	postPlant,
+} = require("../controllers/plants.controller");
 
-plantsRouter.get("/", getPlants);
+plantsRouter.route("/").get(getPlants).post(postPlant);
 
 plantsRouter.get("/:plant_id", getPlantById);
 
