@@ -113,6 +113,12 @@ describe("/api", () => {
 			} = await request(app).get("/api/plants?order=bananas").expect(400);
 			expect(msg).toBe("Invalid order");
 		});
+		test("GET: 404 Plants can only be filtered by an existing type", async () => {
+			const {
+				body: { msg },
+			} = await request(app).get("/api/plants?type=bananas").expect(404);
+			expect(msg).toBe("Type not found");
+		});
 	});
 	describe("/plants/:plant_id", () => {
 		test("GET: Returns 200 and the correct plant", async () => {
