@@ -86,11 +86,17 @@ describe("/api", () => {
 			} = await request(app).get("/api/plants?order=desc").expect(200);
 			expect(plants).toBeSortedBy("plant_name", { descending: true });
 		});
-		test("GET: 400 Plants can only be sorted by a vaild query", async () => {
+		test("GET: 400 Plants can only be sorted by a vaild sort by query", async () => {
 			const {
 				body: { msg },
 			} = await request(app).get("/api/plants?sort_by=bananas").expect(400);
 			expect(msg).toBe("Invalid sort by");
+		});
+		test("GET: 400 Plants can only be sorted by a vaild order query", async () => {
+			const {
+				body: { msg },
+			} = await request(app).get("/api/plants?order=bananas").expect(400);
+			expect(msg).toBe("Invalid order");
 		});
 	});
 	describe("/plants/:plant_id", () => {
