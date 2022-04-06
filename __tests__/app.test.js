@@ -86,6 +86,21 @@ describe("/api", () => {
 			} = await request(app).get("/api/plants?order=desc").expect(200);
 			expect(plants).toBeSortedBy("plant_name", { descending: true });
 		});
+		test("GET: 200 Plants can be filtered by type", async () => {
+			const {
+				body: { plants },
+			} = await request(app).get("/api/plants?type=veg").expect(200);
+			expect(plants.length).toBe(45);
+			plants.forEach((plant) => {
+				expect(plant.type).toBe("veg");
+			});
+		});
+		test("GET: 200 Plants can be filtered by type", async () => {
+			const {
+				body: { plants },
+			} = await request(app).get("/api/plants?type=mushroom").expect(200);
+			expect(plants.length).toBe(0);
+		});
 		test("GET: 400 Plants can only be sorted by a vaild sort by query", async () => {
 			const {
 				body: { msg },
