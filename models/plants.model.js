@@ -37,5 +37,8 @@ exports.fetchPlantById = async (id) => {
         GROUP BY plants.plant_id;`,
 		[id]
 	);
+	if (!rows.length) {
+		return Promise.reject({ status: 404, msg: "Plant not found" });
+	}
 	return rows[0];
 };

@@ -121,7 +121,7 @@ describe("/api", () => {
 		});
 	});
 	describe("/plants/:plant_id", () => {
-		test("GET: Returns 200 and the correct plant", async () => {
+		test("GET: 200 returns the correct plant", async () => {
 			const {
 				body: { plant },
 			} = await request(app).get("/api/plants/1").expect(200);
@@ -134,6 +134,18 @@ describe("/api", () => {
 				votes: 0,
 				comment_count: 0,
 			});
+		});
+		test("GET: 404 returns not found when passed a non existing plant id", async () => {
+			const {
+				body: { msg },
+			} = await request(app).get("/api/plants/999").expect(404);
+			expect(msg).toBe("Plant not found");
+		});
+		test("GET: 400 returns invalid id when passed invalid type", async () => {
+			const {
+				body: { msg },
+			} = await request(app).get("/api/plants/bananas").expect(400);
+			expect(msg).toBe("Invalid id");
 		});
 	});
 });
